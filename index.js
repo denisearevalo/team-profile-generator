@@ -5,8 +5,12 @@ const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
 const team = require("./util/generateHtml");
+const Employee = require("./lib/Employee");
 
 const teamArr = [];
+const managerArr = []
+const engineerArr = [];
+const internArr = [];
 
 const memberQuestions = [
     {
@@ -28,7 +32,7 @@ const memberQuestions = [
         type: "list",
         message: "What is the member's role?",
         choices: ["Manager", "Engineer", "Intern"],
-         name: "role",
+        name: "role",
     },  
 ]
 const managerQuestion = [
@@ -49,37 +53,66 @@ const internQuestion = [
     {   
         type: "input",
         message: "What school did they attend?",
-        name: "officeNumber",
+        name: "school",
     }
 ];
-inquirer
-.prompt([
-    {
-        type: "list",
-        message: "What would you like to do?",
-        choices: ["Add another member.", "Generate"],
-        name: "initial",
-    },
-])
-.then((ans)=>{
-    if (ans.initial ==="Add another member.") {
-        inquirer.prompt(memberQuestions).then((ans)=> {
-            const newMember = new Member (
+const input = () => {
+    inquirer
+    .prompt([
+        {
+            type: "list",
+            message: "What would you like to do?",
+            choices: ["Add another member.", "Generate team"],
+            name: "initial",
+        },
+    ])
+    .then((ans)=>{
+        if (ans.initial ==="Add another member.") {
+            inquirer.prompt(memberQuestions).then((ans)=> {
+                const newMember = new Employee (
                 ans.name,
                 ans.id,
                 ans.email,
                 ans.role,
-            );
+                );
             // how to add the individual question answers????
-        })
-    }else {
-      const teamArr = [];
-      fs.writeFile("./dist/index.html", team(teamArr), (err) =>
-        err ? console.log(err) : console.log("generating HTML")
-      );
-    }
-})
-
+            })
+        }
+    })
+    .then ((ans) => {
+        if (ans.name === "Manager") {
+            inquirer.prompt(managerQuestion).then((ans)=> {
+                const newManager = new Manager (
+                    ans.officeNumber,   
+                );
+                managerArr.push(newManager);
+            input();
+            })
+        } else if (ans.name === "Engineer") {
+            inquirer.prompt(engineerQuestion).then((ans)=> {
+                const newEngineer = new Engineer (
+                    ans.github,   
+                );
+                engineerArr.push(newEngineer);
+                input();    
+            })
+        } else if (ans.name === "Intern") {
+            inquirer.prompt(internQuestion).then((ans)=> {
+                const newIntern = new Intern (
+                    ans.school,   
+                );
+                internArr.push(newIntern);
+                input();    
+            });
+        } else {
+            const teamArr = [...newManager,...newEngineer,...newIntern];
+            fs.writeFile("./dist/index.html", team(teamArr), (err) =>
+            err ? console.log(err) : console.log("generating HTML")
+            );
+        }
+    });
+    input();
+}
 
 
 // couldn't figure it out so i started over with the above
