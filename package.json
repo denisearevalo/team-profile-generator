@@ -4,7 +4,7 @@
     "inquirer": "^8.2.0"
   },
   "name": "team-profile-generator",
-  "description": "",
+  "description": "Description\r This application is to aid a Manager in compiling their team information into a a HTML file.",
   "version": "1.0.0",
   "main": "index.js",
   "devDependencies": {
@@ -22,5 +22,9 @@
   "bugs": {
     "url": "https://github.com/denisearevalo/team-profile-generator/issues"
   },
-  "homepage": "https://github.com/denisearevalo/team-profile-generator#readme"
+  "homepage": "https://github.com/denisearevalo/team-profile-generator#readme",
+  "directories": {
+    "lib": "lib",
+    "test": "test"
+  }
 }

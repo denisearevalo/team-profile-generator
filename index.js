@@ -8,112 +8,113 @@ const team = require("./util/generateHtml");
 const Employee = require("./lib/Employee");
 
 const teamArr = [];
-const managerArr = []
+const managerArr = [];
 const engineerArr = [];
 const internArr = [];
 
 const memberQuestions = [
-    {
-        type: "input",
-        message: "What is the member's name?",
-        name: "name"
-    },
-    {
-        type: "input",
-        message: "What is the member's id?",
-        name: "id"
-    },
-    {
-        type: "input",
-        message: "What is the member's email?",
-        name: "email",
-    },
-    {
-        type: "list",
-        message: "What is the member's role?",
-        choices: ["Manager", "Engineer", "Intern"],
-        name: "role",
-    },  
-]
+  {
+    type: "input",
+    message: "What is the member's name?",
+    name: "name",
+  },
+  {
+    type: "input",
+    message: "What is the member's id?",
+    name: "id",
+  },
+  {
+    type: "input",
+    message: "What is the member's email?",
+    name: "email",
+  },
+  {
+    type: "list",
+    message: "What is the member's role?",
+    choices: ["Manager", "Engineer", "Intern"],
+    name: "role",
+  },
+];
 const managerQuestion = [
-    {   
-        type: "input",
-        message: "What is your office number?",
-        name: "officeNumber",
-    }
-]
+  {
+    type: "input",
+    message: "What is your office number?",
+    name: "officeNumber",
+  },
+];
 const engineerQuestion = [
-    {   
-        type: "input",
-        message: "What is their Github Username",
-        name: "github",
-    }
-]
+  {
+    type: "input",
+    message: "What is their Github Username",
+    name: "github",
+  },
+];
 const internQuestion = [
-    {   
-        type: "input",
-        message: "What school did they attend?",
-        name: "school",
-    }
+  {
+    type: "input",
+    message: "What school did they attend?",
+    name: "school",
+  },
 ];
 const input = () => {
-    inquirer
+  inquirer
     .prompt([
-        {
-            type: "list",
-            message: "What would you like to do?",
-            choices: ["Add another member.", "Generate team"],
-            name: "initial",
-        },
+      {
+        type: "list",
+        message: "What would you like to do?",
+        choices: ["Add another member.", "Generate team"],
+        name: "initial",
+      },
     ])
-    .then((ans)=>{
-        if (ans.initial ==="Add another member.") {
-            inquirer.prompt(memberQuestions).then((ans)=> {
-                const newMember = new Employee (
-                ans.name,
-                ans.id,
-                ans.email,
-                ans.role,
-                );
-            // how to add the individual question answers????
-            })
-        }
-    })
-    .then ((ans) => {
-        if (ans.name === "Manager") {
-            inquirer.prompt(managerQuestion).then((ans)=> {
-                const newManager = new Manager (
-                    ans.officeNumber,   
-                );
-                managerArr.push(newManager);
-            input();
-            })
-        } else if (ans.name === "Engineer") {
-            inquirer.prompt(engineerQuestion).then((ans)=> {
-                const newEngineer = new Engineer (
-                    ans.github,   
-                );
-                engineerArr.push(newEngineer);
-                input();    
-            })
-        } else if (ans.name === "Intern") {
-            inquirer.prompt(internQuestion).then((ans)=> {
-                const newIntern = new Intern (
-                    ans.school,   
-                );
-                internArr.push(newIntern);
-                input();    
+    .then((ans) => {
+      if (ans.initial === "Add another member.") {
+        inquirer.prompt(memberQuestions).then((res) => {
+          const newMember = new Employee(res.name, res.id, res.email, res.role);
+          // how to add the individual question answers????
+          if (res.role === "Manager") {
+            inquirer.prompt(managerQuestion).then((ans) => {
+              const newManager = new Manager(
+                res.name,
+                res.id,
+                res.email,
+                ans.officeNumber
+              );
+              managerArr.push(newManager);
+              input();
             });
-        } else {
-            const teamArr = [...newManager,...newEngineer,...newIntern];
-            fs.writeFile("./dist/index.html", team(teamArr), (err) =>
-            err ? console.log(err) : console.log("generating HTML")
-            );
-        }
+          } else if (res.role === "Engineer") {
+            inquirer.prompt(engineerQuestion).then((ans) => {
+              const newEngineer = new Engineer(
+                res.name,
+                res.id,
+                res.email,
+                ans.github
+              );
+              engineerArr.push(newEngineer);
+              input();
+            });
+          } else if (res.role === "Intern") {
+            inquirer.prompt(internQuestion).then((ans) => {
+              const newIntern = new Intern(
+                res.name,
+                res.id,
+                res.email,
+                ans.school
+              );
+              internArr.push(newIntern);
+              input();
+            });
+          }
+        });
+      } else {
+        const teamArr = [...managerArr, ...engineerArr, ...internArr];
+        fs.writeFile("./dist/index.html", team(teamArr), (err) =>
+          err ? console.log(err) : console.log("generating HTML")
+        );
+      }
     });
-    input();
-}
-
+};
+input();
 
 // couldn't figure it out so i started over with the above
 // // write prompts for team members and their info
@@ -140,7 +141,7 @@ const input = () => {
 //             message: "What is the member's role?",
 //             choices: ["Manager", "Engineer", "Intern"],
 //             name: "role",
-//         },  
+//         },
 //     ])// based on role if the respond  ex: if they respond with engineer role then I need their github etc 3 of these
 //     .then(({name, id, email, role}) => {
 //         let roleResponse = "";
@@ -153,7 +154,7 @@ const input = () => {
 //         } else {
 //         }
 //     })
-// } 
+// }
 // // create for the user role and corresponding info
 // // final step is writing the html file
 // const init = () => {

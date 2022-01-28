@@ -21,3 +21,4 @@ Credits
 Thank you to Louis, Heather, and Isaac for talking my out of my mental blocks.
 
 Demo
+![load page](./assets/teamgenerator.gif)
